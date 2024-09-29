@@ -1,0 +1,23 @@
+gamepath = /mnt/c/Program\ Files\ \(x86\)/Steam/steamapps/common/Outward/Outward_Defed
+pluginpath = BepInEx/plugins
+sideloaderpath = $(pluginpath)/$(modname)/SideLoader
+
+dllsinto:
+	@mkdir -p ../$(TARGET)/public/$(pluginpath)/$(TARGET)
+	cp -u bin/$(modname).dll ../$(TARGET)/public/$(pluginpath)/$(TARGET)/
+	@for dependency in $(dependencies) ; do \
+		(cd ../$${dependency} && make dllsinto TARGET=$(TARGET) --no-print-directory) ; \
+	done
+clean:
+	rm -f -r public
+	rm -f -r thunderstore
+	rm -f $(modname).rar
+	rm -f $(modname)_thunderstore.zip
+	rm -f resources/manifest.json
+	rm -f README.md
+info:
+	echo Modname: $(modname)
+edit:
+	nvim ../Descriptions/$(modname).py
+readme:
+	(cd ../Descriptions/ && python3 $(modname).py)
